@@ -1,0 +1,2 @@
+dubboRpcFilter=com.zongs365.rpc.DubboExceptionFilter
+logRpcFilter=com.zongs365.rpc.LogRpcFilter

@@ -1,0 +1,59 @@
+server:
+  port: 8084
+  servlet.context-path: /api
+
+mybatis-plus:
+  global-config:
+    mapper-locations: classpath*:mapper/*Mapper.xml
+    db-config:
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+logging:
+  level:
+    root: DEBUG
+    org:
+      apache: info
+      hibernate.validator: info
+      springframework: info
+    com.zaxxer.hikari: info
+
+spring:
+  application:
+    name: center-diboot
+  cloud:
+    # Nacos 作为注册中心的配置项
+    nacos:
+      discovery:
+        server-addr: nacos-local.zongsheng.tech:80 # Nacos 服务器地址
+  datasource:
+    url: jdbc:mysql://10.10.0.155:3306/playground?characterEncoding=utf8&serverTimezone=GMT%2B8
+    username: trade_rw
+    password: zP%AX9wVRohqNzz^
+    hikari:
+      maximum-pool-size: 5
+      driver-class-name: com.mysql.cj.jdbc.Driver
+
+  main.allow-bean-definition-overriding: true
+#  # Zipkin 配置项，对应 ZipkinProperties 类
+  zipkin:
+    base-url: http://localhost:9411 # Zipkin 服务的地址
+
+# Dubbo 配置项，对应 DubboConfigurationProperties 类
+dubbo:
+  scan:
+    base-packages: com.zongs365.center.diboot.impl.dubboservice # 指定 Dubbo 服务实现类的扫描基准包
+  # Dubbo 服务暴露的协议配置，对应 ProtocolConfig Map
+  protocols:
+    dubbo:
+      name: dubbo # 协议名称
+      port: -1 # 协议端口，-1 表示自增端口，从 20880 开始
+  # Dubbo 服务注册中心配置，对应 RegistryConfig 类
+  registry:
+    address: spring-cloud://nacos-local.zongsheng.tech:80 # 指定 Dubbo 服务注册中心的地址
+  # Dubbo 服务提供者的配置，对应 ProviderConfig 类
+  provider:
+    filter: tracing,logRpcFilter,dubboRpcFilter
+  # Spring Cloud Alibaba Dubbo 专属配置项，对应 DubboCloudProperties 类
+  cloud:
+    subscribed-services: '' # 设置订阅的应用列表，默认为 * 订阅所有应用
